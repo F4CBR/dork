@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dorking OSINT</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f8ff;
+      color: #333;
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #1a202c;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    input[type="text"] {
+      width: 50%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+    }
+    .section-buttons button {
+      margin: 5px;
+      padding: 12px 24px; /* Larger padding for section buttons */
+      background-color: #007bff;
+      color: white;
+      border: 1px solid #0056b3;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      font-size: 15px;
+    }
+    .dork-options button {
+      margin: 3px;
+      padding: 10px 16px; /* Larger padding for social media buttons */
+      background-color: #6a6dec; /* Updated color for social media buttons */
+      color: white;
+      border: 1px solid #5a5bc4; /* Darker blue border */
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      font-size: 15px;
+    }
+    .dork-options button:hover {
+      background-color: #5a5bc4; /* Darker shade on hover */
+    }
+    .section-buttons button:hover {
+      background-color: #0056b3;
+    }
+    .section {
+      margin-top: 10px;
+    }
+    .submit-btn {
+      margin-top: 15px;
+      padding: 10px 20px; /* Reduced padding for smaller button */
+      background-color: #444655;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px; /* Slightly reduced font size */
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .submit-btn:hover {
+      background-color: #333a4a;
+    }
+    .result-box {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: #2d3748;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .result-box h2 {
+      margin-top: 0;
+      color: #1a202c;
+    }
+    .generated-dork {
+      background-color: #e2e8f0;
+      color: #1a202c;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 15px 0;
+      word-wrap: break-word;
+    }
+    .copy-btn, .search-link {
+      margin: 8px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+    }
+    .copy-btn {
+      background-color: #66bb6a;
+      color: black;
+    }
+    .copy-btn:hover {
+      background-color: #388e3c;
+    }
+    .search-link {
+      background-color: #00b2ff;
+      color: black;
+      font-weight: 600;
+    }
+    .search-link:hover {
+      background-color: #00b2ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dorking OSINT</h1>
+  <div class="container">
+    <div class="input-group">
+      <label for="target">Masukkan Nama / Email / No HP / Username:</label>
+      <input type="text" id="target" placeholder="Contoh: john / john@gmail.com">
+    </div>
+
+    <div class="section-buttons">
+      <button onclick="showOptions('sosmed')">Sosial Media</button>
+      <button onclick="showOptions('email')">Email</button>
+      <button onclick="showOptions('file')">File</button>
+    </div>
+
+    <div class="dork-options" id="sosmed-options" style="display:none">
+      <button onclick="selectDork('sosmed', 'site:facebook.com')">Facebook</button>
+      <button onclick="selectDork('sosmed', 'site:instagram.com')">Instagram</button>
+      <button onclick="selectDork('sosmed', 'site:telegram.com')">Telegram</button>
+      <button onclick="selectDork('sosmed', 'site:x.com')">Twitter</button>
+      <button onclick="selectDork('sosmed', 'site:youtube.com')">YouTube</button>
+      <button onclick="selectDork('sosmed', 'site:facebook.com OR site:instagram.com OR site:telegram.com OR site:x.com OR site:youtube.com')">All Sosmed</button>
+    </div>
+
+    <div class="dork-options" id="email-options" style="display:none">
+      <button onclick="selectDork('email', 'site:gmail.com')">Gmail</button>
+      <button onclick="selectDork('email', 'site:yahoomail.com')">YahooMail</button>
+      <button onclick="selectDork('email', 'site:ac.id')">ac.id</button>
+      <button onclick="selectDork('email', 'site:gmail.com OR site:yahoomail.com OR site:ac.id')">All Email</button>
+    </div>
+
+    <div class="dork-options" id="file-options" style="display:none">
+      <button onclick="selectDork('file', 'filetype:pdf')">PDF</button>
+      <button onclick="selectDork('file', 'filetype:jpg')">JPG</button>
+      <button onclick="selectDork('file', 'filetype:png')">PNG</button>
+      <button onclick="selectDork('file', 'filetype:xls OR filetype:xlsx')">Excel</button>
+      <button onclick="selectDork('file', 'filetype:pptx OR filetype:ppt')">PPT</button>
+      <button onclick="selectDork('file', 'filetype:pdf OR filetype:jpg OR filetype:png OR filetype:xls OR filetype:xlsx OR filetype:pptx OR filetype:ppt')">All Files</button>
+    </div>
+
+    <div class="section">
+      <button class="submit-btn" onclick="generateDork()">Generate Dork</button>
+    </div>
+
+    <div class="result-box" id="resultBox" style="display:none">
+      <h2>Generated dork</h2>
+      <div class="generated-dork" id="generatedDork"></div>
+      <button class="copy-btn" onclick="copyDork()">Copy</button>
+      <a id="googleSearchLink" class="search-link" href="#" target="_blank">Search on Google</a>
+    </div>
+  </div>
+
+  <script>
+    let selectedCategory = '';
+    let selectedQuery = '';
+
+    function showOptions(type) {
+      selectedCategory = type;
+      document.getElementById('sosmed-options').style.display = 'none';
+      document.getElementById('email-options').style.display = 'none';
+      document.getElementById('file-options').style.display = 'none';
+      document.getElementById(`${type}-options`).style.display = 'block';
+    }
+
+    function selectDork(category, dorkFormat) {
+      selectedCategory = category;
+      selectedQuery = dorkFormat;
+    }
+
+    function generateDork() {
+      const input = document.getElementById("target").value.trim();
+      if (!input || !selectedQuery) {
+        alert("Masukkan target dan pilih dork!");
+        return;
+      }
+      const finalDork = `"${input}" ${selectedQuery}`; // Format the dork with double quotes
+      document.getElementById("generatedDork").textContent = finalDork;
+      document.getElementById("googleSearchLink").href = "https://www.google.com/search?q=" + encodeURIComponent(finalDork);
+      document.getElementById("resultBox").style.display = "block";
+    }
+
+    function copyDork() {
+      const dork = document.getElementById("generatedDork").textContent;
+      navigator.clipboard.writeText(dork).then(() => {
+        alert("Dork berhasil disalin!");
+      });
+    }
+  </script>
+</body>
+</html>
